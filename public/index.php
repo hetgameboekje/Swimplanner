@@ -42,7 +42,17 @@ $router->post('/lessen/{id}', LessenController::class, 'bijwerken');
 $router->post('/lessen/{id}/verwijderen', LessenController::class, 'verwijderen');
 $router->get('/lesplanningen', LesplanningController::class, 'index');
 $router->get('/lesplanningen/nieuw', LesplanningController::class, 'nieuw');
+$router->post('/lesplanningen', LesplanningController::class, 'opslaan');
+$router->get('/lesplanningen/{id}/bewerken', LesplanningController::class, 'bewerken');
+$router->post('/lesplanningen/{id}', LesplanningController::class, 'bijwerken');
+$router->post('/lesplanningen/{id}/verwijderen', LesplanningController::class, 'verwijderen');
 $router->get('/materiaal', MateriaalController::class, 'index');
+$router->get('/materiaal/nieuw', MateriaalController::class, 'nieuw');
+$router->post('/materiaal', MateriaalController::class, 'opslaan');
+$router->get('/materiaal/{id}/bewerken', MateriaalController::class, 'bewerken');
+$router->post('/materiaal/{id}', MateriaalController::class, 'bijwerken');
+$router->post('/materiaal/{id}/verwijderen', MateriaalController::class, 'verwijderen');
+$router->post('/materiaal/{id}/activeren', MateriaalController::class, 'activerenToggle');
 
 $pad = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 

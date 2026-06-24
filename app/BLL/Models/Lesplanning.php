@@ -18,6 +18,7 @@ final class Lesplanning
         public readonly string $beginsituatie,
         public readonly string $doelstelling,
         public readonly array $onderdelen = [],
+        public readonly ?int $lesId = null,
     ) {
     }
 

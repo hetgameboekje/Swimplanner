@@ -8,7 +8,7 @@
 
 <table class="table table-striped align-middle">
     <thead>
-    <tr><th>Datum</th><th>Groep</th><th>Tijd</th><th>Locatie</th><th>Instructeur</th><th></th></tr>
+    <tr><th>Datum</th><th>Groep</th><th>Tijd</th><th>Locatie</th><th>Instructeur</th><th class="text-end">Acties</th></tr>
     </thead>
     <tbody>
     <?php foreach ($lesplanningen as $lesplanning): ?>
@@ -16,12 +16,22 @@
             <td><?= $lesplanning->datum->format('d-m-Y') ?></td>
             <td><?= htmlspecialchars($lesplanning->groep->naam) ?></td>
             <td><?= htmlspecialchars($lesplanning->beginTijd) ?> &ndash; <?= htmlspecialchars($lesplanning->eindTijd) ?></td>
-            <td><?= htmlspecialchars($lesplanning->locatie) ?></td>
+            <td><?= $lesplanning->locatie !== '' ? htmlspecialchars($lesplanning->locatie) : '<span class="text-muted">&ndash;</span>' ?></td>
             <td><?= htmlspecialchars($lesplanning->instructeur->naam) ?></td>
             <td class="text-end">
-                <button class="btn btn-sm btn-outline-secondary" disabled><i class="bi bi-printer"></i> Print (later)</button>
+                <div class="btn-group btn-group-sm">
+                    <a href="/lesplanningen/<?= $lesplanning->id ?>/bewerken" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                    <button class="btn btn-outline-secondary" disabled><i class="bi bi-printer"></i></button>
+                    <form method="post" action="/lesplanningen/<?= $lesplanning->id ?>/verwijderen" class="d-inline"
+                          onsubmit="return confirm('Lesplanning van <?= $lesplanning->datum->format('d-m-Y') ?> verwijderen?');">
+                        <button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                </div>
             </td>
         </tr>
     <?php endforeach; ?>
+    <?php if (empty($lesplanningen)): ?>
+        <tr><td colspan="6" class="text-center text-muted">Nog geen lesplanningen aangemaakt.</td></tr>
+    <?php endif; ?>
     </tbody>
 </table>

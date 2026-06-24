@@ -1,8 +1,8 @@
 # Instructeursportaal — Reddingsbrigade (zwemmend redden)
 
-**Login, Groepen en Lessen zijn volledig functioneel** tegen de echte
-MySQL-database, met audit-logging (AUTHID) op elke wijziging. Lesplanningen
-en Materiaal zijn nog front-end demo's op statische demo-data.
+**Alle kernmodules zijn volledig functioneel** tegen de echte MySQL-database
+(Login, Groepen, Leden, Lessen, Lesplanningen, Materiaal), met audit-logging
+(AUTHID) op elke wijziging. Er is geen Fake/demo-DAL meer over.
 
 ## Inloggen
 
@@ -12,7 +12,9 @@ Demo-accounts (wachtwoord voor alle drie: `demo123`):
 - sven@reddingsbrigade.nl (instructeur)
 
 Alle pagina's behalve `/login` vereisen een sessie — zonder in te loggen
-stuurt `public/index.php` je automatisch naar `/login`.
+stuurt `public/index.php` je automatisch naar `/login`. Beheerders zien
+alles; instructeurs zien alleen groepen die ze zelf hebben aangemaakt of
+waar ze aan gekoppeld zijn (en de bijbehorende dashboard-waarschuwingen).
 
 ## Architectuur
 
@@ -23,14 +25,13 @@ Presentation (MVC: Controllers + Views)
         ↓ gebruikt
 BLL (Services + Interfaces + domeinmodellen)
         ↑ wordt geïmplementeerd door
-DAL (Pdo* voor Login/Groepen/Lessen — Fake* voor Lesplanningen/Materiaal)
+DAL (app/DAL/Pdo — echte database, geen Fake-DAL meer)
 ```
 
 - `app/Presentation` — Controllers en Views (Bootstrap 5 + jQuery). Kent alleen de BLL-services.
-- `app/BLL` — domeinmodellen (`Models`), interfaces (`Interfaces`) en businesslogica (`Services`, incl. validatie zoals de zondag-check op lessen). Kent de DAL **niet** rechtstreeks, alleen via interfaces (SOLID — Dependency Inversion).
-- `app/DAL/Pdo` — echte database-implementatie (Gebruiker, Afdeling, Groep, Les). Voert ook de audit-logging uit ná elke create/update/delete.
-- `app/DAL/Fake` — in-memory implementatie voor de modules die nog niet op de database draaien (Lesplanning, Materiaal). Wordt module voor module vervangen door `Pdo*`-klassen, zonder dat BLL of Presentation wijzigen.
-- `app/Core` — Router (incl. `{id}`-parameters), basis Controller, View-renderer, `Container` die interfaces aan implementaties koppelt (`config/bindings.php`), `AuditLogger`, `Flash`-meldingen, en `HuidigeGebruiker` (sessie-gebaseerde AUTHID).
+- `app/BLL` — domeinmodellen (`Models`), interfaces (`Interfaces`) en businesslogica (`Services`, incl. validatie). Kent de DAL **niet** rechtstreeks, alleen via interfaces (SOLID — Dependency Inversion).
+- `app/DAL/Pdo` — de database-implementatie van alle interfaces. Voert ook de audit-logging uit ná elke create/update/delete. Repositories met relaties (Les, Lesplanning) bouwen hun resultaat op via compositie van andere repositories (bv. `PdoLesRepository` vraagt Groep/Gebruiker op via hun eigen interface) i.p.v. dezelfde joins overal te dupliceren.
+- `app/Core` — Router (incl. `{id}`-parameters), basis Controller, View-renderer, `Container` die interfaces aan implementaties koppelt (`config/bindings.php`), `AuditLogger`, `Flash`-meldingen, en `HuidigeGebruiker` (sessie-gebaseerde AUTHID + rol-check).
 
 **Let op — bekende valkuil met de minimale autoloader:** elke klasse/enum
 moet in zijn eigen bestand staan (`Klasse.php` → klasse `Klasse`). De
@@ -45,8 +46,10 @@ zet, faalt het zodra het tweede symbool als eerste wordt aangeroepen. Met
 2. Stel de **document root** van de vhost in op de map `public/` (Laragon
    detecteert dit niet altijd automatisch bij een kale PHP-structuur — check
    `C:\laragon\etc\apache2\sites-enabled\auto.<naam>.test.conf`).
-3. Open `http://swimplanner.test/`.
-4. Optioneel: draai `composer install` — dit overschrijft `vendor/autoload.php`
+3. Zorg voor een `public/.htaccess` die alles naar `index.php` rewrit
+   (al aanwezig) — zonder deze regel geeft Apache 404 op alles behalve `/`.
+4. Open `http://swimplanner.test/`.
+5. Optioneel: draai `composer install` — dit overschrijft `vendor/autoload.php`
    met de echte Composer-autoloader. Geen externe package-dependencies nodig.
 
 ## Database opbouwen vanuit XML
@@ -82,37 +85,23 @@ unieke combinaties: `<unique columns="kolom_a,kolom_b" />` binnen `<table>`.
 
 ## Wat al écht werkt
 
-- **Login/logout** — sessie-gebaseerd, wachtwoord-hash-verificatie, audit-log
-  voor login/logout (`App\BLL\Services\AuthService`, `App\Core\HuidigeGebruiker`)
-- **Groepen** — aanmaken, bewerken, deactiveren/activeren, verwijderen,
-  instructeur(s) koppelen; FK-conflict bij verwijderen geeft een nette
-  foutmelding in plaats van een crash
-- **Lessen** — aanmaken, bewerken, verwijderen; een les kan aan **meerdere
-  groepen én meerdere instructeurs** gekoppeld worden (many-to-many via
-  `les_groepen`/`les_instructeurs`), met optionele begin-/eindtijd en
-  **locatie**. Elke datum is toegestaan (geen zondag-eis — incidentele
-  lessen voor aspiranten/kader mogen op elke dag). Dashboard-waarschuwing
-  ("les zonder lesplanning") draait op echte data.
-- **Groepen** hebben een **start- en (optionele) einddatum**, zodat dezelfde
-  groepsnaam over meerdere seizoenen/jaren heen apart bijgehouden kan worden
-- Op de Lessen-pagina is de **"Ontbreekt"-badge klikbaar**: opent
-  `/lesplanningen/nieuw` met groep, datum, tijden en locatie van die les al
-  ingevuld
-- **Bulk lessen inplannen** (`/lessen/bulk`) — éénmalig groep(en),
-  instructeur(s), tijden, locatie en type invullen, dan tot 52 lessen met
-  een vast interval (bv. wekelijks) in één keer aanmaken — handig voor een
-  jaarplanning-achtige opzet
-- Elke create/update/delete/login/logout wordt gelogd in `audit_logs` met
-  AUTHID, actie, entiteit, record-id en een samenvatting
+- **Login/logout** — sessie-gebaseerd, wachtwoord-hash-verificatie, audit-log voor login/logout
+- **Groepen** — aanmaken, bewerken, deactiveren/activeren, verwijderen, instructeur(s) koppelen, start-/einddatum (voor gebruik over meerdere seizoenen). Instructeurs zien alleen hun eigen groepen; beheerders zien alles.
+- **Leden** — per groep (klik op een groep) leden toevoegen (voornaam, achternaam, jaartal, contactgegevens) en uitschrijven, met behoud van historie (`groep_leden.datum_uitgeschreven`)
+- **Lessen** — aanmaken, bewerken, verwijderen; **meerdere groepen én meerdere instructeurs** per les, optionele begin-/eindtijd en locatie, elke datum toegestaan. **Bulk inplannen** (`/lessen/bulk`) tot 52 lessen met een vast interval in één keer.
+- **Lesplanningen** — volledige CRUD, incl. lesonderdelen (dynamisch aantal, standaard Inleiding/Kern 1/Kern 2/Afsluiting) met per onderdeel een materiaal-selectie. Klik op **"Ontbreekt"** bij een les → opent een lesplanning met groep/datum/tijden/locatie al ingevuld en gekoppeld aan die les (`lesplanningen.les_id`); na opslaan verandert de badge naar "Aanwezig" en verdwijnt de dashboard-waarschuwing.
+- **Materiaal** — volledige CRUD (aanmaken/bewerken/deactiveren/verwijderen), centraal beheerd
+- Dashboard toont alleen de eerste 2 waarschuwingen + een "+N andere meldingen"-uitklapper
+- Elke create/update/delete/login/logout wordt gelogd in `audit_logs` met AUTHID, actie, entiteit, record-id en een samenvatting
 
 ## Wat dit nog niet doet
 
-- Lesplanningen en Materiaal draaien nog op de Fake-DAL (statische
-  demo-data, geen opslaan/wijzigen)
 - Geen ALTER-ondersteuning in de schema-builder — kolom toevoegen aan een
   bestaande tabel vereist `--fresh` (dropt en herbouwt alles; geen probleem
   zolang er geen productiedata in staat)
 - Geen CSRF-bescherming en geen wachtwoord-reset (intranet-demo-niveau)
-- Geen rollen-gebaseerde rechten in de UI (beheerder/instructeur hebben nu
-  evenveel rechten — `HuidigeGebruiker::isBeheerder()` bestaat al, wordt
-  nog nergens gebruikt om acties te beperken)
+- Geen rollen-gebaseerde rechten op acties (beheerder/instructeur hebben nu
+  evenveel rechten binnen wat ze zien — `HuidigeGebruiker::isBeheerder()`
+  bestaat al en wordt gebruikt voor zichtbaarheid, niet voor actie-rechten)
+- Geen printvriendelijke weergave van lesplanningen (eerder wel als wens genoemd, nog niet gebouwd)
+- Aanwezigheidsregistratie en Jaarplanning staan nog op de planning (nog niet gebouwd)

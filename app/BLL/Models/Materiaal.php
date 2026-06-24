@@ -9,7 +9,7 @@ final class Materiaal
     public function __construct(
         public readonly int $id,
         public readonly string $naam,
-        public readonly string $categorie,
+        public readonly ?string $categorie = null,
         public readonly bool $actief = true,
     ) {
     }
