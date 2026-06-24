@@ -13,8 +13,8 @@
         <a href="/lesplanningen" class="list-group-item list-group-item-action <?= str_starts_with($huidigePad, '/lesplanningen') ? 'active' : '' ?>">
             <i class="bi bi-journal-text"></i> Lesplanningen
         </a>
-        <a href="#" class="list-group-item list-group-item-action disabled">
-            <i class="bi bi-clipboard-check"></i> Aanwezigheid <span class="badge text-bg-secondary float-end">later</span>
+        <a href="/lessen" class="list-group-item list-group-item-action" title="Kies een les om de aanwezigheid te registreren">
+            <i class="bi bi-clipboard-check"></i> Aanwezigheid
         </a>
         <a href="/materiaal" class="list-group-item list-group-item-action <?= str_starts_with($huidigePad, '/materiaal') ? 'active' : '' ?>">
             <i class="bi bi-box-seam"></i> Materiaal

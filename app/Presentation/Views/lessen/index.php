@@ -48,6 +48,7 @@
             </td>
             <td class="text-end">
                 <div class="btn-group btn-group-sm">
+                    <a href="/lessen/<?= $les->id ?>/aanwezigheid" class="btn btn-outline-secondary" title="Aanwezigheid"><i class="bi bi-clipboard-check"></i></a>
                     <a href="/lessen/<?= $les->id ?>/bewerken" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i></a>
                     <form method="post" action="/lessen/<?= $les->id ?>/verwijderen" class="d-inline"
                           onsubmit="return confirm('Les op <?= $les->datum->format('d-m-Y') ?> verwijderen?');">

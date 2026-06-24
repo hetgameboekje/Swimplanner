@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\BLL\Interfaces\AanwezigheidRepositoryInterface;
 use App\BLL\Interfaces\AfdelingRepositoryInterface;
 use App\BLL\Interfaces\GebruikerRepositoryInterface;
 use App\BLL\Interfaces\GroepRepositoryInterface;
@@ -10,6 +11,7 @@ use App\BLL\Interfaces\LesRepositoryInterface;
 use App\BLL\Interfaces\LidRepositoryInterface;
 use App\BLL\Interfaces\MateriaalRepositoryInterface;
 use App\Core\Container;
+use App\DAL\Pdo\PdoAanwezigheidRepository;
 use App\DAL\Pdo\PdoAfdelingRepository;
 use App\DAL\Pdo\PdoGebruikerRepository;
 use App\DAL\Pdo\PdoGroepRepository;
@@ -36,3 +38,4 @@ Container::bind(LesplanningRepositoryInterface::class, static fn () => new PdoLe
     Container::maak(GebruikerRepositoryInterface::class),
     Container::maak(MateriaalRepositoryInterface::class),
 ));
+Container::bind(AanwezigheidRepositoryInterface::class, static fn () => new PdoAanwezigheidRepository());

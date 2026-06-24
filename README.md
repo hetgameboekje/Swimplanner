@@ -91,7 +91,8 @@ unieke combinaties: `<unique columns="kolom_a,kolom_b" />` binnen `<table>`.
 - **Lessen** — aanmaken, bewerken, verwijderen; **meerdere groepen én meerdere instructeurs** per les, optionele begin-/eindtijd en locatie, elke datum toegestaan. **Bulk inplannen** (`/lessen/bulk`) tot 52 lessen met een vast interval in één keer.
 - **Lesplanningen** — volledige CRUD, incl. lesonderdelen (dynamisch aantal, standaard Inleiding/Kern 1/Kern 2/Afsluiting) met per onderdeel een materiaal-selectie. Klik op **"Ontbreekt"** bij een les → opent een lesplanning met groep/datum/tijden/locatie al ingevuld en gekoppeld aan die les (`lesplanningen.les_id`); na opslaan verandert de badge naar "Aanwezig" en verdwijnt de dashboard-waarschuwing.
 - **Materiaal** — volledige CRUD (aanmaken/bewerken/deactiveren/verwijderen), centraal beheerd
-- **Printen van lesplanningen** (`/lesplanningen/{id}/print`) — opmaak volgt de structuur van het officiële lesvoorbereidingsformulier (LVF): kopblok met naam/datum/locatie/tijd/groepsgrootte, beginsituatie/doelstelling, en een onderdelen-tabel met dezelfde kolomkoppen (Tijd, Doel, Activiteit, Organisatie en Materialen, Didactische aanwijzingen). Opent in een nieuw tabblad, printknop roept gewoon `window.print()` aan.
+- **Printen van lesplanningen** (`/lesplanningen/{id}/print`) — opmaak volgt de structuur van het officiële lesvoorbereidingsformulier (LVF): liggend A4, logo rechtsboven, kopblok met naam/datum/locatie/tijd/groepsgrootte, beginsituatie/doelstelling, en een onderdelen-tabel met dezelfde kolomkoppen (Tijd, Doel, Activiteit, Organisatie en Materialen, Didactische aanwijzingen). Opent in een nieuw tabblad, printknop roept gewoon `window.print()` aan.
+- **Aanwezigheid** (`/lessen/{id}/aanwezigheid`) — registreert per les de aanwezigheid (aanwezig/afwezig/afgemeld/te laat) + opmerking voor alle leden van de gekoppelde groep(en) in één formulier. Opslaan is een upsert (geen dubbele rijen bij opnieuw opslaan), bereikbaar via het klembord-icoon op de Lessen-pagina.
 - Dashboard toont alleen de eerste 2 waarschuwingen + een "+N andere meldingen"-uitklapper
 - Elke create/update/delete/login/logout wordt gelogd in `audit_logs` met AUTHID, actie, entiteit, record-id en een samenvatting
 
@@ -104,4 +105,4 @@ unieke combinaties: `<unique columns="kolom_a,kolom_b" />` binnen `<table>`.
 - Geen rollen-gebaseerde rechten op acties (beheerder/instructeur hebben nu
   evenveel rechten binnen wat ze zien — `HuidigeGebruiker::isBeheerder()`
   bestaat al en wordt gebruikt voor zichtbaarheid, niet voor actie-rechten)
-- Aanwezigheidsregistratie en Jaarplanning staan nog op de planning (nog niet gebouwd)
+- Jaarplanning staat nog op de planning (nog niet gebouwd)

@@ -40,6 +40,8 @@ $router->post('/lessen/bulk', LessenController::class, 'bulkOpslaan');
 $router->get('/lessen/{id}/bewerken', LessenController::class, 'bewerken');
 $router->post('/lessen/{id}', LessenController::class, 'bijwerken');
 $router->post('/lessen/{id}/verwijderen', LessenController::class, 'verwijderen');
+$router->get('/lessen/{id}/aanwezigheid', LessenController::class, 'aanwezigheid');
+$router->post('/lessen/{id}/aanwezigheid', LessenController::class, 'aanwezigheidOpslaan');
 $router->get('/lesplanningen', LesplanningController::class, 'index');
 $router->get('/lesplanningen/nieuw', LesplanningController::class, 'nieuw');
 $router->post('/lesplanningen', LesplanningController::class, 'opslaan');

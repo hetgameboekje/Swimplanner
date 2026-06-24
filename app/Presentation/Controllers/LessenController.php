@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Presentation\Controllers;
 
+use App\BLL\Interfaces\AanwezigheidRepositoryInterface;
 use App\BLL\Interfaces\GebruikerRepositoryInterface;
 use App\BLL\Interfaces\GroepRepositoryInterface;
 use App\BLL\Interfaces\LesRepositoryInterface;
 use App\BLL\Models\LesType;
+use App\BLL\Services\AanwezigheidService;
 use App\BLL\Services\GebruikerService;
 use App\BLL\Services\GroepService;
 use App\BLL\Services\LesService;
@@ -21,12 +23,14 @@ final class LessenController extends Controller
     private LesService $lesService;
     private GroepService $groepService;
     private GebruikerService $gebruikerService;
+    private AanwezigheidService $aanwezigheidService;
 
     public function __construct()
     {
         $this->lesService = new LesService(Container::maak(LesRepositoryInterface::class));
         $this->groepService = new GroepService(Container::maak(GroepRepositoryInterface::class));
         $this->gebruikerService = new GebruikerService(Container::maak(GebruikerRepositoryInterface::class));
+        $this->aanwezigheidService = new AanwezigheidService(Container::maak(AanwezigheidRepositoryInterface::class));
     }
 
     public function index(): void
@@ -151,6 +155,44 @@ final class LessenController extends Controller
         }
 
         $this->redirect('/lessen');
+    }
+
+    public function aanwezigheid(string $id): void
+    {
+        $les = $this->lesService->zoekOpId((int) $id);
+        if ($les === null) {
+            http_response_code(404);
+            echo 'Les niet gevonden.';
+            return;
+        }
+
+        $this->render('lessen/aanwezigheid', [
+            'les' => $les,
+            'regels' => $this->aanwezigheidService->voorLes($les->id),
+        ]);
+    }
+
+    public function aanwezigheidOpslaan(string $id): void
+    {
+        $statussen = $_POST['status'] ?? [];
+        $opmerkingen = $_POST['opmerking'] ?? [];
+
+        $ruweRegels = [];
+        foreach ($statussen as $lidId => $status) {
+            $ruweRegels[$lidId] = [
+                'status' => $status,
+                'opmerking' => $opmerkingen[$lidId] ?? '',
+            ];
+        }
+
+        try {
+            $this->aanwezigheidService->opslaan((int) $id, $ruweRegels, HuidigeGebruiker::id());
+            Flash::zet('success', 'Aanwezigheid opgeslagen.');
+        } catch (\InvalidArgumentException $fout) {
+            Flash::zet('danger', $fout->getMessage());
+        }
+
+        $this->redirect("/lessen/{$id}/aanwezigheid");
     }
 
     private function leegAlsNull(?string $waarde): ?string
