@@ -89,12 +89,19 @@ unieke combinaties: `<unique columns="kolom_a,kolom_b" />` binnen `<table>`.
   foutmelding in plaats van een crash
 - **Lessen** — aanmaken, bewerken, verwijderen; een les kan aan **meerdere
   groepen én meerdere instructeurs** gekoppeld worden (many-to-many via
-  `les_groepen`/`les_instructeurs`), met optionele begin-/eindtijd voor
-  lesblokken met meerdere lessen per dag. Elke datum is toegestaan (geen
-  zondag-eis — incidentele lessen voor aspiranten/kader mogen op elke dag).
-  Dashboard-waarschuwing ("les zonder lesplanning") draait op echte data.
+  `les_groepen`/`les_instructeurs`), met optionele begin-/eindtijd en
+  **locatie**. Elke datum is toegestaan (geen zondag-eis — incidentele
+  lessen voor aspiranten/kader mogen op elke dag). Dashboard-waarschuwing
+  ("les zonder lesplanning") draait op echte data.
 - **Groepen** hebben een **start- en (optionele) einddatum**, zodat dezelfde
   groepsnaam over meerdere seizoenen/jaren heen apart bijgehouden kan worden
+- Op de Lessen-pagina is de **"Ontbreekt"-badge klikbaar**: opent
+  `/lesplanningen/nieuw` met groep, datum, tijden en locatie van die les al
+  ingevuld
+- **Bulk lessen inplannen** (`/lessen/bulk`) — éénmalig groep(en),
+  instructeur(s), tijden, locatie en type invullen, dan tot 52 lessen met
+  een vast interval (bv. wekelijks) in één keer aanmaken — handig voor een
+  jaarplanning-achtige opzet
 - Elke create/update/delete/login/logout wordt gelogd in `audit_logs` met
   AUTHID, actie, entiteit, record-id en een samenvatting
 

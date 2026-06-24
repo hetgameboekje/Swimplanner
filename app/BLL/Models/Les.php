@@ -20,6 +20,7 @@ final class Les
         public readonly array $instructeurs,
         public readonly ?string $beginTijd = null,
         public readonly ?string $eindTijd = null,
+        public readonly ?string $locatie = null,
         public readonly bool $heeftLesplanning = false,
     ) {
     }

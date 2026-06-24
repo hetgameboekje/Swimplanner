@@ -66,6 +66,7 @@ final class PdoLesRepository implements LesRepositoryInterface
         array $instructeurIds,
         ?string $beginTijd,
         ?string $eindTijd,
+        ?string $locatie,
         int $authId,
     ): int {
         $connectie = Database::connectie();
@@ -73,13 +74,14 @@ final class PdoLesRepository implements LesRepositoryInterface
 
         try {
             $statement = $connectie->prepare(
-                'INSERT INTO lessen (datum, begin_tijd, eind_tijd, type, created_by)
-                 VALUES (:datum, :begin_tijd, :eind_tijd, :type, :created_by)'
+                'INSERT INTO lessen (datum, begin_tijd, eind_tijd, locatie, type, created_by)
+                 VALUES (:datum, :begin_tijd, :eind_tijd, :locatie, :type, :created_by)'
             );
             $statement->execute([
                 'datum' => $datum->format('Y-m-d'),
                 'begin_tijd' => $beginTijd,
                 'eind_tijd' => $eindTijd,
+                'locatie' => $locatie,
                 'type' => $type,
                 'created_by' => $authId,
             ]);
@@ -108,6 +110,7 @@ final class PdoLesRepository implements LesRepositoryInterface
         array $instructeurIds,
         ?string $beginTijd,
         ?string $eindTijd,
+        ?string $locatie,
         int $authId,
     ): void {
         $connectie = Database::connectie();
@@ -115,13 +118,14 @@ final class PdoLesRepository implements LesRepositoryInterface
 
         try {
             $statement = $connectie->prepare(
-                'UPDATE lessen SET datum = :datum, begin_tijd = :begin_tijd, eind_tijd = :eind_tijd, type = :type
+                'UPDATE lessen SET datum = :datum, begin_tijd = :begin_tijd, eind_tijd = :eind_tijd, locatie = :locatie, type = :type
                  WHERE id = :id'
             );
             $statement->execute([
                 'datum' => $datum->format('Y-m-d'),
                 'begin_tijd' => $beginTijd,
                 'eind_tijd' => $eindTijd,
+                'locatie' => $locatie,
                 'type' => $type,
                 'id' => $id,
             ]);
@@ -209,6 +213,7 @@ final class PdoLesRepository implements LesRepositoryInterface
             $instructeurs,
             $rij['begin_tijd'],
             $rij['eind_tijd'],
+            $rij['locatie'],
             $heeftLesplanning,
         );
     }

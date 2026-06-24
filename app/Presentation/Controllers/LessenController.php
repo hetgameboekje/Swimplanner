@@ -59,6 +59,7 @@ final class LessenController extends Controller
                 array_map('intval', $_POST['instructeur_ids'] ?? []),
                 $this->leegAlsNull($_POST['begin_tijd'] ?? null),
                 $this->leegAlsNull($_POST['eind_tijd'] ?? null),
+                $this->leegAlsNull($_POST['locatie'] ?? null),
                 HuidigeGebruiker::id(),
             );
             Flash::zet('success', 'Les aangemaakt.');
@@ -100,6 +101,7 @@ final class LessenController extends Controller
                 array_map('intval', $_POST['instructeur_ids'] ?? []),
                 $this->leegAlsNull($_POST['begin_tijd'] ?? null),
                 $this->leegAlsNull($_POST['eind_tijd'] ?? null),
+                $this->leegAlsNull($_POST['locatie'] ?? null),
                 HuidigeGebruiker::id(),
             );
             Flash::zet('success', 'Les bijgewerkt.');
@@ -114,6 +116,39 @@ final class LessenController extends Controller
     {
         $this->lesService->verwijderen((int) $id, HuidigeGebruiker::id());
         Flash::zet('success', 'Les verwijderd.');
+
+        $this->redirect('/lessen');
+    }
+
+    public function bulkNieuw(): void
+    {
+        $this->render('lessen/bulk', [
+            'groepen' => $this->groepService->alleGroepen(),
+            'instructeurs' => $this->gebruikerService->alleInstructeurs(),
+            'lesTypes' => LesType::cases(),
+            'vandaag' => (new \DateTimeImmutable())->format('Y-m-d'),
+        ]);
+    }
+
+    public function bulkOpslaan(): void
+    {
+        try {
+            $idsAangemaakt = $this->lesService->aanmakenBulk(
+                array_map('intval', $_POST['groep_ids'] ?? []),
+                (string) ($_POST['start_datum'] ?? ''),
+                (int) ($_POST['aantal_lessen'] ?? 0),
+                (int) ($_POST['interval_dagen'] ?? 7),
+                (string) ($_POST['type'] ?? ''),
+                array_map('intval', $_POST['instructeur_ids'] ?? []),
+                $this->leegAlsNull($_POST['begin_tijd'] ?? null),
+                $this->leegAlsNull($_POST['eind_tijd'] ?? null),
+                $this->leegAlsNull($_POST['locatie'] ?? null),
+                HuidigeGebruiker::id(),
+            );
+            Flash::zet('success', count($idsAangemaakt) . ' lessen aangemaakt.');
+        } catch (\InvalidArgumentException $fout) {
+            Flash::zet('danger', $fout->getMessage());
+        }
 
         $this->redirect('/lessen');
     }

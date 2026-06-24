@@ -10,6 +10,8 @@ use App\BLL\Models\LesType;
 
 final class LesService
 {
+    private const MAX_BULK_LESSEN = 52;
+
     public function __construct(
         private readonly LesRepositoryInterface $lesRepository,
     ) {
@@ -37,6 +39,7 @@ final class LesService
         array $instructeurIds,
         ?string $beginTijd,
         ?string $eindTijd,
+        ?string $locatie,
         int $authId,
     ): int {
         $groepIds = $this->valideerIds($groepIds, 'Kies minimaal één groep.');
@@ -45,7 +48,7 @@ final class LesService
         $lesType = $this->valideerType($type);
         $this->valideerTijden($beginTijd, $eindTijd);
 
-        return $this->lesRepository->aanmaken($groepIds, $datumObject, $lesType->value, $instructeurIds, $beginTijd, $eindTijd, $authId);
+        return $this->lesRepository->aanmaken($groepIds, $datumObject, $lesType->value, $instructeurIds, $beginTijd, $eindTijd, $this->leeg($locatie), $authId);
     }
 
     /**
@@ -60,6 +63,7 @@ final class LesService
         array $instructeurIds,
         ?string $beginTijd,
         ?string $eindTijd,
+        ?string $locatie,
         int $authId,
     ): void {
         $groepIds = $this->valideerIds($groepIds, 'Kies minimaal één groep.');
@@ -68,7 +72,60 @@ final class LesService
         $lesType = $this->valideerType($type);
         $this->valideerTijden($beginTijd, $eindTijd);
 
-        $this->lesRepository->bijwerken($id, $groepIds, $datumObject, $lesType->value, $instructeurIds, $beginTijd, $eindTijd, $authId);
+        $this->lesRepository->bijwerken($id, $groepIds, $datumObject, $lesType->value, $instructeurIds, $beginTijd, $eindTijd, $this->leeg($locatie), $authId);
+    }
+
+    /**
+     * Plant tot MAX_BULK_LESSEN lessen in met dezelfde groepen/instructeurs/
+     * tijden/locatie, telkens $intervalDagen na elkaar — handig om in één
+     * keer een seizoen/jaar aan reguliere lessen klaar te zetten.
+     *
+     * @param int[] $groepIds
+     * @param int[] $instructeurIds
+     * @return int[] de aangemaakte les-id's
+     */
+    public function aanmakenBulk(
+        array $groepIds,
+        string $startDatum,
+        int $aantalLessen,
+        int $intervalDagen,
+        string $type,
+        array $instructeurIds,
+        ?string $beginTijd,
+        ?string $eindTijd,
+        ?string $locatie,
+        int $authId,
+    ): array {
+        $groepIds = $this->valideerIds($groepIds, 'Kies minimaal één groep.');
+        $instructeurIds = $this->valideerIds($instructeurIds, 'Kies minimaal één instructeur.');
+        $startDatumObject = $this->valideerDatum($startDatum);
+        $lesType = $this->valideerType($type);
+        $this->valideerTijden($beginTijd, $eindTijd);
+        $locatie = $this->leeg($locatie);
+
+        if ($aantalLessen < 1 || $aantalLessen > self::MAX_BULK_LESSEN) {
+            throw new \InvalidArgumentException('Aantal lessen moet tussen 1 en ' . self::MAX_BULK_LESSEN . ' liggen.');
+        }
+        if ($intervalDagen < 1) {
+            throw new \InvalidArgumentException('Interval moet minimaal 1 dag zijn.');
+        }
+
+        $idsAangemaakt = [];
+        for ($i = 0; $i < $aantalLessen; $i++) {
+            $datum = $startDatumObject->modify('+' . ($i * $intervalDagen) . ' days');
+            $idsAangemaakt[] = $this->lesRepository->aanmaken(
+                $groepIds,
+                $datum,
+                $lesType->value,
+                $instructeurIds,
+                $beginTijd,
+                $eindTijd,
+                $locatie,
+                $authId,
+            );
+        }
+
+        return $idsAangemaakt;
     }
 
     public function verwijderen(int $id, int $authId): void
@@ -112,5 +169,10 @@ final class LesService
         if ($beginTijd !== null && $beginTijd !== '' && $eindTijd !== null && $eindTijd !== '' && $beginTijd >= $eindTijd) {
             throw new \InvalidArgumentException('Eindtijd moet na begintijd liggen.');
         }
+    }
+
+    private function leeg(?string $waarde): ?string
+    {
+        return ($waarde === null || trim($waarde) === '') ? null : trim($waarde);
     }
 }

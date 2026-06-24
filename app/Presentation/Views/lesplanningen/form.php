@@ -2,11 +2,18 @@
 /** @var \App\BLL\Models\Groep[] $groepen */
 /** @var \App\BLL\Models\Materiaal[] $materialen */
 /** @var string[] $standaardOnderdelen */
+/** @var array{groepId: ?int, datum: ?string, beginTijd: ?string, eindTijd: ?string, locatie: ?string} $vooraf */
 ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h4 mb-0">Nieuwe lesplanning</h1>
     <span class="badge text-bg-warning">Demo &mdash; opslaan doet nog niets</span>
 </div>
+
+<?php if ($vooraf['groepId'] !== null): ?>
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Gegevens overgenomen vanuit de bijbehorende les.
+    </div>
+<?php endif; ?>
 
 <form>
     <div class="card mb-3">
@@ -20,26 +27,28 @@
                 <label class="form-label">Groep / doelgroep</label>
                 <select class="form-select">
                     <?php foreach ($groepen as $groep): ?>
-                        <option><?= htmlspecialchars($groep->naam) ?></option>
+                        <option value="<?= $groep->id ?>" <?= $vooraf['groepId'] === $groep->id ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($groep->naam) ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="col-md-4">
                 <label class="form-label">Locatie</label>
-                <input type="text" class="form-control" placeholder="bv. Zwembad De Roerdomp, baan 3-4">
+                <input type="text" class="form-control" placeholder="bv. Zwembad De Roerdomp, baan 3-4"
+                       value="<?= htmlspecialchars($vooraf['locatie'] ?? '') ?>">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Datum (altijd zondag)</label>
-                <input type="date" class="form-control">
-                <div class="form-text">Validatie op zondag volgt in de functionele fase.</div>
+                <label class="form-label">Datum</label>
+                <input type="date" class="form-control" value="<?= htmlspecialchars($vooraf['datum'] ?? '') ?>">
             </div>
             <div class="col-md-4">
                 <label class="form-label">Begintijd</label>
-                <input type="time" class="form-control" value="10:00">
+                <input type="time" class="form-control" value="<?= htmlspecialchars($vooraf['beginTijd'] ?? '10:00') ?>">
             </div>
             <div class="col-md-4">
                 <label class="form-label">Eindtijd</label>
-                <input type="time" class="form-control" value="11:00">
+                <input type="time" class="form-control" value="<?= htmlspecialchars($vooraf['eindTijd'] ?? '11:00') ?>">
             </div>
             <div class="col-md-6">
                 <label class="form-label">Beginsituatie</label>

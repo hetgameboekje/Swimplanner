@@ -3,7 +3,10 @@
 ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h4 mb-0">Lessen</h1>
-    <a href="/lessen/nieuw" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Nieuwe les</a>
+    <div class="d-flex gap-2">
+        <a href="/lessen/bulk" class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-range"></i> Bulk inplannen</a>
+        <a href="/lessen/nieuw" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Nieuwe les</a>
+    </div>
 </div>
 
 <table class="table table-striped align-middle">
@@ -12,6 +15,7 @@
         <th>Datum</th>
         <th>Tijd</th>
         <th>Groep(en)</th>
+        <th>Locatie</th>
         <th>Type</th>
         <th>Instructeur(s)</th>
         <th>Lesplanning</th>
@@ -30,13 +34,16 @@
                 <?php endif; ?>
             </td>
             <td><?= htmlspecialchars(implode(', ', array_map(static fn ($g) => $g->naam, $les->groepen))) ?></td>
+            <td><?= $les->locatie !== null ? htmlspecialchars($les->locatie) : '<span class="text-muted">&ndash;</span>' ?></td>
             <td><span class="badge text-bg-light border"><?= htmlspecialchars($les->type->value) ?></span></td>
             <td><?= htmlspecialchars(implode(', ', array_map(static fn ($i) => $i->naam, $les->instructeurs))) ?></td>
             <td>
                 <?php if ($les->heeftLesplanning): ?>
                     <span class="badge text-bg-success">Aanwezig</span>
                 <?php else: ?>
-                    <span class="badge text-bg-warning text-dark">Ontbreekt</span>
+                    <a href="/lesplanningen/nieuw?les_id=<?= $les->id ?>" class="badge text-bg-warning text-dark text-decoration-none" title="Klik om een lesplanning te maken met deze gegevens al ingevuld">
+                        Ontbreekt
+                    </a>
                 <?php endif; ?>
             </td>
             <td class="text-end">
@@ -51,7 +58,7 @@
         </tr>
     <?php endforeach; ?>
     <?php if (empty($lessen)): ?>
-        <tr><td colspan="7" class="text-center text-muted">Nog geen lessen aangemaakt.</td></tr>
+        <tr><td colspan="8" class="text-center text-muted">Nog geen lessen aangemaakt.</td></tr>
     <?php endif; ?>
     </tbody>
 </table>

@@ -63,6 +63,11 @@ $standaardDatum = $les?->datum->format('Y-m-d') ?? (new DateTimeImmutable())->fo
                 <input type="time" name="eind_tijd" class="form-control" value="<?= htmlspecialchars(substr($les?->eindTijd ?? '', 0, 5)) ?>">
                 <div class="form-text">Optioneel — handig bij meerdere lessen op één dag.</div>
             </div>
+            <div class="col-md-6">
+                <label class="form-label">Locatie</label>
+                <input type="text" name="locatie" class="form-control" placeholder="bv. Zwembad De Roerdomp, baan 1"
+                       value="<?= htmlspecialchars($les?->locatie ?? '') ?>">
+            </div>
         </div>
     </div>
 

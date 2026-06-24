@@ -3,6 +3,7 @@
     <column name="datum" type="DATE" />
     <column name="begin_tijd" type="TIME" nullable="true" />
     <column name="eind_tijd" type="TIME" nullable="true" />
+    <column name="locatie" type="VARCHAR" length="190" nullable="true" />
     <column name="type" type="ENUM" values="regulier,activiteit,examen" default="regulier" />
     <column name="created_by" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
     <column name="created_at" type="DATETIME" default="CURRENT_TIMESTAMP" />

@@ -27,6 +27,7 @@ interface LesRepositoryInterface
         array $instructeurIds,
         ?string $beginTijd,
         ?string $eindTijd,
+        ?string $locatie,
         int $authId,
     ): int;
 
@@ -42,6 +43,7 @@ interface LesRepositoryInterface
         array $instructeurIds,
         ?string $beginTijd,
         ?string $eindTijd,
+        ?string $locatie,
         int $authId,
     ): void;
 

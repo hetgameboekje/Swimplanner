@@ -32,6 +32,8 @@ $router->post('/groepen/{id}/activeren', GroepenController::class, 'activerenTog
 $router->get('/lessen', LessenController::class, 'index');
 $router->get('/lessen/nieuw', LessenController::class, 'nieuw');
 $router->post('/lessen', LessenController::class, 'opslaan');
+$router->get('/lessen/bulk', LessenController::class, 'bulkNieuw');
+$router->post('/lessen/bulk', LessenController::class, 'bulkOpslaan');
 $router->get('/lessen/{id}/bewerken', LessenController::class, 'bewerken');
 $router->post('/lessen/{id}', LessenController::class, 'bijwerken');
 $router->post('/lessen/{id}/verwijderen', LessenController::class, 'verwijderen');
