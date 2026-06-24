@@ -48,14 +48,14 @@ final class PdoGroepRepository implements GroepRepositoryInterface
     public function vanInstructeur(int $instructeurId): array
     {
         $statement = Database::connectie()->prepare(
-            'SELECT g.*, a.naam AS afdeling_naam, a.actief AS afdeling_actief
+            'SELECT DISTINCT g.*, a.naam AS afdeling_naam, a.actief AS afdeling_actief
              FROM groepen g
              JOIN afdelingen a ON a.id = g.afdeling_id
-             JOIN groep_instructeurs gi ON gi.groep_id = g.id
-             WHERE gi.gebruiker_id = :gebruiker_id
+             LEFT JOIN groep_instructeurs gi ON gi.groep_id = g.id
+             WHERE gi.gebruiker_id = :gebruiker_id OR g.created_by = :aanmaker_id
              ORDER BY g.naam'
         );
-        $statement->execute(['gebruiker_id' => $instructeurId]);
+        $statement->execute(['gebruiker_id' => $instructeurId, 'aanmaker_id' => $instructeurId]);
 
         return array_map($this->rijNaarGroep(...), $statement->fetchAll());
     }

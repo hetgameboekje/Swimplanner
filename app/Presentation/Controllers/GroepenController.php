@@ -31,7 +31,7 @@ final class GroepenController extends Controller
     public function index(): void
     {
         $this->render('groepen/index', [
-            'groepen' => $this->groepService->alleGroepen(),
+            'groepen' => $this->groepService->zichtbareGroepen(HuidigeGebruiker::id(), HuidigeGebruiker::isBeheerder()),
         ]);
     }
 

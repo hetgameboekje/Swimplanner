@@ -13,7 +13,7 @@ interface GroepRepositoryInterface
 
     public function zoekOpId(int $id): ?Groep;
 
-    /** @return Groep[] gekoppeld aan deze instructeur */
+    /** @return Groep[] gekoppeld aan deze instructeur óf door deze gebruiker zelf aangemaakt */
     public function vanInstructeur(int $instructeurId): array;
 
     public function aanmaken(

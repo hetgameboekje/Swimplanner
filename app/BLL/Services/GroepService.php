@@ -25,6 +25,18 @@ final class GroepService
         return $this->groepRepository->zoekOpId($id);
     }
 
+    /**
+     * Beheerders zien alle groepen; instructeurs zien alleen groepen die
+     * ze zelf hebben aangemaakt of waar ze als instructeur aan gekoppeld
+     * zijn.
+     *
+     * @return Groep[]
+     */
+    public function zichtbareGroepen(int $gebruikerId, bool $isBeheerder): array
+    {
+        return $isBeheerder ? $this->alleGroepen() : $this->groepRepository->vanInstructeur($gebruikerId);
+    }
+
     /** @param int[] $instructeurIds */
     public function aanmaken(
         string $naam,

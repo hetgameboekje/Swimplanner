@@ -10,6 +10,7 @@ use App\BLL\Services\GroepService;
 use App\BLL\Services\WaarschuwingService;
 use App\Core\Container;
 use App\Core\Controller;
+use App\Core\HuidigeGebruiker;
 
 final class DashboardController extends Controller
 {
@@ -18,9 +19,13 @@ final class DashboardController extends Controller
         $groepService = new GroepService(Container::maak(GroepRepositoryInterface::class));
         $waarschuwingService = new WaarschuwingService(Container::maak(LesRepositoryInterface::class));
 
+        $isBeheerder = HuidigeGebruiker::isBeheerder();
+        $groepen = $groepService->zichtbareGroepen(HuidigeGebruiker::id(), $isBeheerder);
+        $beperkTotGroepIds = $isBeheerder ? null : array_map(static fn ($groep) => $groep->id, $groepen);
+
         $this->render('dashboard/index', [
-            'groepen' => $groepService->alleGroepen(),
-            'waarschuwingen' => $waarschuwingService->actueleWaarschuwingen(),
+            'groepen' => $groepen,
+            'waarschuwingen' => $waarschuwingService->actueleWaarschuwingen($beperkTotGroepIds),
         ]);
     }
 }
