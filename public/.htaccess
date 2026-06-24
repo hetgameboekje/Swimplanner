@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Bestaande bestanden (css/js/afbeeldingen) direct serveren
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Alles anders naar de front controller
+RewriteRule ^ index.php [QSA,L]

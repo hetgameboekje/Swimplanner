@@ -9,12 +9,16 @@
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark px-3 topbar">
+<nav class="navbar navbar-dark bg-dark px-3 topbar d-flex justify-content-between">
     <span class="navbar-brand mb-0 h1">
         <i class="bi bi-life-preserver"></i> Instructeursportaal &mdash; Zwemmend redden
     </span>
-    <span class="navbar-text text-white-50 small">
-        Ingelogd als <strong class="text-white">Timo Bergthaler</strong> (instructeur) &middot; DEMO, geen echte data
+    <span class="navbar-text text-white-50 small d-flex align-items-center gap-2">
+        Ingelogd als <strong class="text-white"><?= htmlspecialchars(\App\Core\HuidigeGebruiker::naam()) ?></strong>
+        (<?= htmlspecialchars(\App\Core\HuidigeGebruiker::rol()?->value ?? '') ?>)
+        <form method="post" action="/uitloggen" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-outline-light">Uitloggen</button>
+        </form>
     </span>
 </nav>
 <div class="d-flex app-shell">

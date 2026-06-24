@@ -11,6 +11,8 @@ final class Groep
         public readonly int $id,
         public readonly string $naam,
         public readonly Afdeling $afdeling,
+        public readonly \DateTimeImmutable $startDatum,
+        public readonly ?\DateTimeImmutable $eindDatum = null,
         public readonly array $instructeurs = [],
         public readonly int $aantalLeden = 0,
         public readonly bool $actief = true,

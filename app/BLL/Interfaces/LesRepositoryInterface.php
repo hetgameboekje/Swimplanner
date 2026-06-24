@@ -15,4 +15,35 @@ interface LesRepositoryInterface
 
     /** @return Les[] lessen zonder gekoppelde lesplanning (voor dashboard-waarschuwingen) */
     public function zonderLesplanning(): array;
+
+    /**
+     * @param int[] $groepIds
+     * @param int[] $instructeurIds
+     */
+    public function aanmaken(
+        array $groepIds,
+        \DateTimeImmutable $datum,
+        string $type,
+        array $instructeurIds,
+        ?string $beginTijd,
+        ?string $eindTijd,
+        int $authId,
+    ): int;
+
+    /**
+     * @param int[] $groepIds
+     * @param int[] $instructeurIds
+     */
+    public function bijwerken(
+        int $id,
+        array $groepIds,
+        \DateTimeImmutable $datum,
+        string $type,
+        array $instructeurIds,
+        ?string $beginTijd,
+        ?string $eindTijd,
+        int $authId,
+    ): void;
+
+    public function verwijderen(int $id, int $authId): void;
 }

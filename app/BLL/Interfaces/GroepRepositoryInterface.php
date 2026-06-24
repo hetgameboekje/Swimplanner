@@ -15,4 +15,28 @@ interface GroepRepositoryInterface
 
     /** @return Groep[] gekoppeld aan deze instructeur */
     public function vanInstructeur(int $instructeurId): array;
+
+    public function aanmaken(
+        string $naam,
+        int $afdelingId,
+        \DateTimeImmutable $startDatum,
+        ?\DateTimeImmutable $eindDatum,
+        int $authId,
+    ): int;
+
+    public function bijwerken(
+        int $id,
+        string $naam,
+        int $afdelingId,
+        \DateTimeImmutable $startDatum,
+        ?\DateTimeImmutable $eindDatum,
+        int $authId,
+    ): void;
+
+    public function verwijderen(int $id, int $authId): void;
+
+    public function actiefWijzigen(int $id, bool $actief, int $authId): void;
+
+    /** @param int[] $gebruikerIds */
+    public function instructeursInstellen(int $groepId, array $gebruikerIds, int $authId): void;
 }

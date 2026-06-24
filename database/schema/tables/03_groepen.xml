@@ -2,6 +2,8 @@
     <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
     <column name="afdeling_id" type="INT" references="afdelingen.id" onDelete="RESTRICT" />
     <column name="naam" type="VARCHAR" length="150" />
+    <column name="start_datum" type="DATE" />
+    <column name="eind_datum" type="DATE" nullable="true" />
     <column name="actief" type="TINYINT" default="1" />
     <column name="created_by" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
     <column name="created_at" type="DATETIME" default="CURRENT_TIMESTAMP" />

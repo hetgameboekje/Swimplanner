@@ -7,8 +7,8 @@
         <a href="/groepen" class="list-group-item list-group-item-action <?= str_starts_with($huidigePad, '/groepen') ? 'active' : '' ?>">
             <i class="bi bi-people"></i> Groepen
         </a>
-        <a href="#" class="list-group-item list-group-item-action disabled">
-            <i class="bi bi-calendar3"></i> Lessen <span class="badge text-bg-secondary float-end">later</span>
+        <a href="/lessen" class="list-group-item list-group-item-action <?= str_starts_with($huidigePad, '/lessen') ? 'active' : '' ?>">
+            <i class="bi bi-calendar3"></i> Lessen
         </a>
         <a href="/lesplanningen" class="list-group-item list-group-item-action <?= str_starts_with($huidigePad, '/lesplanningen') ? 'active' : '' ?>">
             <i class="bi bi-journal-text"></i> Lesplanningen

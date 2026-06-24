@@ -1,3 +1,6 @@
+<?php
+/** @var array{type: string, bericht: string}|null $flash */
+?>
 <!doctype html>
 <html lang="nl">
 <head>
@@ -16,18 +19,23 @@
                 <h1 class="h5 mt-2 mb-0">Instructeursportaal</h1>
                 <small class="text-muted">Reddingsbrigade &mdash; zwemmend redden</small>
             </div>
-            <div class="alert alert-warning small">DEMO &mdash; dit formulier doet nog niets, login is nog niet functioneel.</div>
-            <form>
+
+            <?php if (!empty($flash)): ?>
+                <div class="alert alert-<?= htmlspecialchars($flash['type']) ?>"><?= htmlspecialchars($flash['bericht']) ?></div>
+            <?php endif; ?>
+
+            <form method="post" action="/login">
                 <div class="mb-3">
                     <label class="form-label">E-mailadres</label>
-                    <input type="email" class="form-control" placeholder="naam@reddingsbrigade.nl" disabled>
+                    <input type="email" name="email" class="form-control" placeholder="naam@reddingsbrigade.nl" required autofocus>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Wachtwoord</label>
-                    <input type="password" class="form-control" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" disabled>
+                    <input type="password" name="wachtwoord" class="form-control" required>
                 </div>
-                <a href="/" class="btn btn-primary w-100">Doorgaan naar dashboard (demo)</a>
+                <button type="submit" class="btn btn-primary w-100">Inloggen</button>
             </form>
+            <p class="text-muted small mt-3 mb-0">Demo-accounts (wachtwoord <code>demo123</code>): timo@reddingsbrigade.nl, anna@reddingsbrigade.nl, sven@reddingsbrigade.nl</p>
         </div>
     </div>
 </div>

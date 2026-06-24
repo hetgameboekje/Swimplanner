@@ -1,0 +1,7 @@
+<table name="les_instructeurs">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="les_id" type="INT" references="lessen.id" onDelete="CASCADE" />
+    <column name="gebruiker_id" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
+
+    <unique columns="les_id,gebruiker_id" />
+</table>

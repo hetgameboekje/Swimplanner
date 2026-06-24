@@ -1,0 +1,125 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Presentation\Controllers;
+
+use App\BLL\Interfaces\GebruikerRepositoryInterface;
+use App\BLL\Interfaces\GroepRepositoryInterface;
+use App\BLL\Interfaces\LesRepositoryInterface;
+use App\BLL\Models\LesType;
+use App\BLL\Services\GebruikerService;
+use App\BLL\Services\GroepService;
+use App\BLL\Services\LesService;
+use App\Core\Container;
+use App\Core\Controller;
+use App\Core\Flash;
+use App\Core\HuidigeGebruiker;
+
+final class LessenController extends Controller
+{
+    private LesService $lesService;
+    private GroepService $groepService;
+    private GebruikerService $gebruikerService;
+
+    public function __construct()
+    {
+        $this->lesService = new LesService(Container::maak(LesRepositoryInterface::class));
+        $this->groepService = new GroepService(Container::maak(GroepRepositoryInterface::class));
+        $this->gebruikerService = new GebruikerService(Container::maak(GebruikerRepositoryInterface::class));
+    }
+
+    public function index(): void
+    {
+        $this->render('lessen/index', [
+            'lessen' => $this->lesService->alleLessen(),
+        ]);
+    }
+
+    public function nieuw(): void
+    {
+        $this->render('lessen/form', [
+            'les' => null,
+            'groepen' => $this->groepService->alleGroepen(),
+            'instructeurs' => $this->gebruikerService->alleInstructeurs(),
+            'lesTypes' => LesType::cases(),
+            'actiePad' => '/lessen',
+            'geselecteerdeGroepIds' => [],
+            'geselecteerdeInstructeurIds' => [],
+        ]);
+    }
+
+    public function opslaan(): void
+    {
+        try {
+            $this->lesService->aanmaken(
+                array_map('intval', $_POST['groep_ids'] ?? []),
+                (string) ($_POST['datum'] ?? ''),
+                (string) ($_POST['type'] ?? ''),
+                array_map('intval', $_POST['instructeur_ids'] ?? []),
+                $this->leegAlsNull($_POST['begin_tijd'] ?? null),
+                $this->leegAlsNull($_POST['eind_tijd'] ?? null),
+                HuidigeGebruiker::id(),
+            );
+            Flash::zet('success', 'Les aangemaakt.');
+        } catch (\InvalidArgumentException $fout) {
+            Flash::zet('danger', $fout->getMessage());
+        }
+
+        $this->redirect('/lessen');
+    }
+
+    public function bewerken(string $id): void
+    {
+        $les = $this->lesService->zoekOpId((int) $id);
+        if ($les === null) {
+            http_response_code(404);
+            echo 'Les niet gevonden.';
+            return;
+        }
+
+        $this->render('lessen/form', [
+            'les' => $les,
+            'groepen' => $this->groepService->alleGroepen(),
+            'instructeurs' => $this->gebruikerService->alleInstructeurs(),
+            'lesTypes' => LesType::cases(),
+            'actiePad' => "/lessen/{$les->id}",
+            'geselecteerdeGroepIds' => array_map(static fn ($groep) => $groep->id, $les->groepen),
+            'geselecteerdeInstructeurIds' => array_map(static fn ($instructeur) => $instructeur->id, $les->instructeurs),
+        ]);
+    }
+
+    public function bijwerken(string $id): void
+    {
+        try {
+            $this->lesService->bijwerken(
+                (int) $id,
+                array_map('intval', $_POST['groep_ids'] ?? []),
+                (string) ($_POST['datum'] ?? ''),
+                (string) ($_POST['type'] ?? ''),
+                array_map('intval', $_POST['instructeur_ids'] ?? []),
+                $this->leegAlsNull($_POST['begin_tijd'] ?? null),
+                $this->leegAlsNull($_POST['eind_tijd'] ?? null),
+                HuidigeGebruiker::id(),
+            );
+            Flash::zet('success', 'Les bijgewerkt.');
+        } catch (\InvalidArgumentException $fout) {
+            Flash::zet('danger', $fout->getMessage());
+        }
+
+        $this->redirect('/lessen');
+    }
+
+    public function verwijderen(string $id): void
+    {
+        $this->lesService->verwijderen((int) $id, HuidigeGebruiker::id());
+        Flash::zet('success', 'Les verwijderd.');
+
+        $this->redirect('/lessen');
+    }
+
+    private function leegAlsNull(?string $waarde): ?string
+    {
+        return ($waarde === null || $waarde === '') ? null : $waarde;
+    }
+}

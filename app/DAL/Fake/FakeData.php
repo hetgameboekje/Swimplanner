@@ -7,8 +7,6 @@ namespace App\DAL\Fake;
 use App\BLL\Models\Afdeling;
 use App\BLL\Models\Gebruiker;
 use App\BLL\Models\Groep;
-use App\BLL\Models\Les;
-use App\BLL\Models\LesType;
 use App\BLL\Models\Lesplanning;
 use App\BLL\Models\LesplanningOnderdeel;
 use App\BLL\Models\Materiaal;
@@ -44,28 +42,12 @@ final class FakeData
         $afdeling = self::afdelingZwemmendRedden();
         $instructeur = self::instructeur();
 
+        $startVorigSeizoen = new \DateTimeImmutable('first day of September last year');
+
         return $groepen = [
-            new Groep(1, 'Zwemmend Redder 1', $afdeling, [$instructeur], 14),
-            new Groep(2, 'Zwemmend Redder 2', $afdeling, [$instructeur], 11),
-            new Groep(3, 'Junior Redder', $afdeling, [$instructeur], 9),
-        ];
-    }
-
-    /** @return Les[] */
-    public static function lessen(): array
-    {
-        static $lessen = null;
-        if ($lessen !== null) {
-            return $lessen;
-        }
-
-        $groepen = self::groepen();
-        $instructeur = self::instructeur();
-
-        return $lessen = [
-            new Les(1, $groepen[0], new \DateTimeImmutable('next sunday'), LesType::Regulier, $instructeur, true),
-            new Les(2, $groepen[1], new \DateTimeImmutable('next sunday +7 days'), LesType::Regulier, $instructeur, false),
-            new Les(3, $groepen[2], new \DateTimeImmutable('next sunday +14 days'), LesType::Examen, $instructeur, false),
+            new Groep(1, 'Zwemmend Redder 1', $afdeling, $startVorigSeizoen, null, [$instructeur], 14),
+            new Groep(2, 'Zwemmend Redder 2', $afdeling, $startVorigSeizoen, null, [$instructeur], 11),
+            new Groep(3, 'Junior Redder', $afdeling, $startVorigSeizoen, null, [$instructeur], 9),
         ];
     }
 

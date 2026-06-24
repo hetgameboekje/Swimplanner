@@ -1,0 +1,7 @@
+<table name="les_groepen">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="les_id" type="INT" references="lessen.id" onDelete="CASCADE" />
+    <column name="groep_id" type="INT" references="groepen.id" onDelete="RESTRICT" />
+
+    <unique columns="les_id,groep_id" />
+</table>

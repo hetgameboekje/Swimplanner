@@ -23,10 +23,12 @@ final class WaarschuwingService
         $waarschuwingen = [];
 
         foreach ($this->lesRepository->zonderLesplanning() as $les) {
+            $groepNamen = implode(', ', array_map(static fn ($groep) => $groep->naam, $les->groepen));
             $waarschuwingen[] = sprintf(
-                'Les op %s voor groep "%s" heeft nog geen lesplanning.',
+                'Les op %s voor groep%s "%s" heeft nog geen lesplanning.',
                 $les->datum->format('d-m-Y'),
-                $les->groep->naam,
+                count($les->groepen) > 1 ? 'en' : '',
+                $groepNamen,
             );
         }
 

@@ -6,8 +6,10 @@ namespace App\Core;
 
 /**
  * Minimale route-dispatcher: methode + pad -> [Controller::class, 'actie'].
- * Geen externe dependency; bewust klein gehouden zodat het gedrag volledig
- * inzichtelijk blijft.
+ * Ondersteunt dynamische segmenten zoals "/groepen/{id}/bewerken"; de
+ * waarden worden in volgorde als argumenten aan de controller-actie
+ * meegegeven. Geen externe dependency; bewust klein gehouden zodat het
+ * gedrag volledig inzichtelijk blijft.
  */
 final class Router
 {
@@ -31,7 +33,7 @@ final class Router
             $pad = '/';
         }
 
-        $route = $this->routes[$methode][$pad] ?? null;
+        $route = $this->vindRoute($methode, $pad);
 
         if ($route === null) {
             http_response_code(404);
@@ -39,8 +41,35 @@ final class Router
             return;
         }
 
-        [$controllerClass, $actie] = $route;
+        [$controllerClass, $actie, $parameters] = $route;
         $controller = new $controllerClass();
-        $controller->$actie();
+        $controller->$actie(...$parameters);
+    }
+
+    /**
+     * @return array{0: class-string, 1: string, 2: list<string>}|null
+     */
+    private function vindRoute(string $methode, string $pad): ?array
+    {
+        $routesVoorMethode = $this->routes[$methode] ?? [];
+
+        if (isset($routesVoorMethode[$pad])) {
+            [$controller, $actie] = $routesVoorMethode[$pad];
+            return [$controller, $actie, []];
+        }
+
+        foreach ($routesVoorMethode as $patroon => $route) {
+            if (!str_contains($patroon, '{')) {
+                continue;
+            }
+
+            $regex = '#^' . preg_replace('#\{\w+\}#', '([^/]+)', $patroon) . '$#';
+            if (preg_match($regex, $pad, $matches)) {
+                [$controller, $actie] = $route;
+                return [$controller, $actie, array_slice($matches, 1)];
+            }
+        }
+
+        return null;
     }
 }

@@ -14,7 +14,7 @@
         <div class="card-body row g-3">
             <div class="col-md-4">
                 <label class="form-label">Instructeur</label>
-                <input type="text" class="form-control" value="Timo Bergthaler (ingelogde gebruiker)" disabled>
+                <input type="text" class="form-control" value="<?= htmlspecialchars(\App\Core\HuidigeGebruiker::naam()) ?> (ingelogde gebruiker)" disabled>
             </div>
             <div class="col-md-4">
                 <label class="form-label">Groep / doelgroep</label>

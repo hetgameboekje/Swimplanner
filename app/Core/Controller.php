@@ -15,4 +15,10 @@ abstract class Controller
     {
         View::renderZonderLayout($view, $data);
     }
+
+    protected function redirect(string $pad): never
+    {
+        header("Location: {$pad}");
+        exit;
+    }
 }
