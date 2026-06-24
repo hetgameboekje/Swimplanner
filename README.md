@@ -93,6 +93,7 @@ unieke combinaties: `<unique columns="kolom_a,kolom_b" />` binnen `<table>`.
 - **Materiaal** — volledige CRUD (aanmaken/bewerken/deactiveren/verwijderen), centraal beheerd
 - **Printen van lesplanningen** (`/lesplanningen/{id}/print`) — opmaak volgt de structuur van het officiële lesvoorbereidingsformulier (LVF): liggend A4, logo rechtsboven, kopblok met naam/datum/locatie/tijd/groepsgrootte, beginsituatie/doelstelling, en een onderdelen-tabel met dezelfde kolomkoppen (Tijd, Doel, Activiteit, Organisatie en Materialen, Didactische aanwijzingen). Opent in een nieuw tabblad, printknop roept gewoon `window.print()` aan.
 - **Aanwezigheid** (`/lessen/{id}/aanwezigheid`) — registreert per les de aanwezigheid (aanwezig/afwezig/afgemeld/te laat) + opmerking voor alle leden van de gekoppelde groep(en) in één formulier. Opslaan is een upsert (geen dubbele rijen bij opnieuw opslaan), bereikbaar via het klembord-icoon op de Lessen-pagina.
+- **Aanwezigheidsoverzicht** (`/aanwezigheid`, sidebar) — matrix per groep: leden als rijen, lesdatums als kolommen, kleurgecodeerde status per cel. Respecteert dezelfde zichtbaarheid als Groepen (instructeurs zien alleen hun eigen groepen/leden, beheerders alles). Puur leesweergave — registreren/wijzigen blijft via de les zelf.
 - Dashboard toont alleen de eerste 2 waarschuwingen + een "+N andere meldingen"-uitklapper
 - Elke create/update/delete/login/logout wordt gelogd in `audit_logs` met AUTHID, actie, entiteit, record-id en een samenvatting
 

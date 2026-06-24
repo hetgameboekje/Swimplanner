@@ -9,6 +9,7 @@ require __DIR__ . '/../config/bindings.php';
 
 use App\Core\HuidigeGebruiker;
 use App\Core\Router;
+use App\Presentation\Controllers\AanwezigheidController;
 use App\Presentation\Controllers\AuthController;
 use App\Presentation\Controllers\DashboardController;
 use App\Presentation\Controllers\GroepenController;
@@ -19,6 +20,7 @@ use App\Presentation\Controllers\MateriaalController;
 $router = new Router();
 
 $router->get('/', DashboardController::class, 'index');
+$router->get('/aanwezigheid', AanwezigheidController::class, 'overzicht');
 $router->get('/login', AuthController::class, 'login');
 $router->post('/login', AuthController::class, 'inloggen');
 $router->post('/uitloggen', AuthController::class, 'uitloggen');
