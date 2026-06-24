@@ -41,7 +41,7 @@ $overigeWaarschuwingen = array_slice($waarschuwingen, 2);
                     <h2 class="h6 card-title"><?= htmlspecialchars($groep->naam) ?></h2>
                     <p class="card-text text-muted small mb-1"><?= htmlspecialchars($groep->afdeling->naam) ?></p>
                     <p class="card-text"><?= $groep->aantalLeden ?> leden</p>
-                    <a href="/groepen" class="btn btn-sm btn-outline-primary">Bekijk groep</a>
+                    <a href="/groepen/<?= $groep->id ?>" class="btn btn-sm btn-outline-primary">Bekijk groep</a>
                 </div>
             </div>
         </div>

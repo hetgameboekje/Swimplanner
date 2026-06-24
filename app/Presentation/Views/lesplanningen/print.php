@@ -77,6 +77,20 @@
             font-style: italic;
             font-size: 9pt;
         }
+        .kop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4cm;
+        }
+        .kop-titel {
+            font-weight: bold;
+            font-size: 13pt;
+        }
+        .kop img.logo {
+            height: 55px;
+            width: auto;
+        }
         @media print {
             .toolbar { display: none; }
             .vel { margin: 0; max-width: none; }
@@ -90,8 +104,12 @@
 </div>
 
 <div class="vel">
+    <div class="kop">
+        <div class="kop-titel">LESVOORBEREIDINGSFORMULIER (LVF)</div>
+        <img src="/assets/img/logo-reddingsbrigade.png" alt="Reddingsbrigade Limburg-Noord Roermond" class="logo">
+    </div>
+
     <table class="lvf">
-        <tr><td class="titel" colspan="3">LESVOORBEREIDINGSFORMULIER (LVF)</td></tr>
         <tr>
             <td class="label" style="width:40%">Naam</td>
             <td class="label" style="width:40%">Naam praktijkbegeleider</td>
