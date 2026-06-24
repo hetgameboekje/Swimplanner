@@ -46,6 +46,7 @@ $router->post('/lesplanningen', LesplanningController::class, 'opslaan');
 $router->get('/lesplanningen/{id}/bewerken', LesplanningController::class, 'bewerken');
 $router->post('/lesplanningen/{id}', LesplanningController::class, 'bijwerken');
 $router->post('/lesplanningen/{id}/verwijderen', LesplanningController::class, 'verwijderen');
+$router->get('/lesplanningen/{id}/print', LesplanningController::class, 'print');
 $router->get('/materiaal', MateriaalController::class, 'index');
 $router->get('/materiaal/nieuw', MateriaalController::class, 'nieuw');
 $router->post('/materiaal', MateriaalController::class, 'opslaan');

@@ -168,4 +168,18 @@ final class LesplanningController extends Controller
 
         $this->redirect('/lesplanningen');
     }
+
+    public function print(string $id): void
+    {
+        $lesplanning = $this->lesplanningService->zoekOpId((int) $id);
+        if ($lesplanning === null) {
+            http_response_code(404);
+            echo 'Lesplanning niet gevonden.';
+            return;
+        }
+
+        $this->renderZonderLayout('lesplanningen/print', [
+            'lesplanning' => $lesplanning,
+        ]);
+    }
 }

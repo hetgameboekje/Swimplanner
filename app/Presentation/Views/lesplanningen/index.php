@@ -21,7 +21,7 @@
             <td class="text-end">
                 <div class="btn-group btn-group-sm">
                     <a href="/lesplanningen/<?= $lesplanning->id ?>/bewerken" class="btn btn-outline-secondary"><i class="bi bi-pencil"></i></a>
-                    <button class="btn btn-outline-secondary" disabled><i class="bi bi-printer"></i></button>
+                    <a href="/lesplanningen/<?= $lesplanning->id ?>/print" target="_blank" class="btn btn-outline-secondary" title="Printen"><i class="bi bi-printer"></i></a>
                     <form method="post" action="/lesplanningen/<?= $lesplanning->id ?>/verwijderen" class="d-inline"
                           onsubmit="return confirm('Lesplanning van <?= $lesplanning->datum->format('d-m-Y') ?> verwijderen?');">
                         <button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
