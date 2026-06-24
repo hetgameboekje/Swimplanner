@@ -7,6 +7,7 @@ use App\BLL\Interfaces\GebruikerRepositoryInterface;
 use App\BLL\Interfaces\GroepRepositoryInterface;
 use App\BLL\Interfaces\LesplanningRepositoryInterface;
 use App\BLL\Interfaces\LesRepositoryInterface;
+use App\BLL\Interfaces\LidRepositoryInterface;
 use App\BLL\Interfaces\MateriaalRepositoryInterface;
 use App\Core\Container;
 use App\DAL\Fake\FakeLesplanningRepository;
@@ -15,6 +16,7 @@ use App\DAL\Pdo\PdoAfdelingRepository;
 use App\DAL\Pdo\PdoGebruikerRepository;
 use App\DAL\Pdo\PdoGroepRepository;
 use App\DAL\Pdo\PdoLesRepository;
+use App\DAL\Pdo\PdoLidRepository;
 
 /**
  * Koppelt DAL-interfaces aan implementaties.
@@ -31,6 +33,7 @@ Container::bind(LesRepositoryInterface::class, static fn () => new PdoLesReposit
     Container::maak(GroepRepositoryInterface::class),
     Container::maak(GebruikerRepositoryInterface::class),
 ));
+Container::bind(LidRepositoryInterface::class, static fn () => new PdoLidRepository());
 
 Container::bind(LesplanningRepositoryInterface::class, static fn () => new FakeLesplanningRepository());
 Container::bind(MateriaalRepositoryInterface::class, static fn () => new FakeMateriaalRepository());

@@ -7,9 +7,11 @@ namespace App\Presentation\Controllers;
 use App\BLL\Interfaces\AfdelingRepositoryInterface;
 use App\BLL\Interfaces\GebruikerRepositoryInterface;
 use App\BLL\Interfaces\GroepRepositoryInterface;
+use App\BLL\Interfaces\LidRepositoryInterface;
 use App\BLL\Services\AfdelingService;
 use App\BLL\Services\GebruikerService;
 use App\BLL\Services\GroepService;
+use App\BLL\Services\LidService;
 use App\Core\Container;
 use App\Core\Controller;
 use App\Core\Flash;
@@ -20,12 +22,14 @@ final class GroepenController extends Controller
     private GroepService $groepService;
     private GebruikerService $gebruikerService;
     private AfdelingService $afdelingService;
+    private LidService $lidService;
 
     public function __construct()
     {
         $this->groepService = new GroepService(Container::maak(GroepRepositoryInterface::class));
         $this->gebruikerService = new GebruikerService(Container::maak(GebruikerRepositoryInterface::class));
         $this->afdelingService = new AfdelingService(Container::maak(AfdelingRepositoryInterface::class));
+        $this->lidService = new LidService(Container::maak(LidRepositoryInterface::class));
     }
 
     public function index(): void
@@ -128,5 +132,52 @@ final class GroepenController extends Controller
         }
 
         $this->redirect('/groepen');
+    }
+
+    public function tonen(string $id): void
+    {
+        $groep = $this->groepService->zoekOpId((int) $id);
+        if ($groep === null) {
+            http_response_code(404);
+            echo 'Groep niet gevonden.';
+            return;
+        }
+
+        $this->render('groepen/tonen', [
+            'groep' => $groep,
+            'leden' => $this->lidService->ledenVanGroep($groep->id),
+        ]);
+    }
+
+    public function lidToevoegen(string $id): void
+    {
+        try {
+            $this->lidService->toevoegenAanGroep(
+                (string) ($_POST['voornaam'] ?? ''),
+                (string) ($_POST['achternaam'] ?? ''),
+                $this->leegAlsNull($_POST['geboortejaar'] ?? null),
+                $this->leegAlsNull($_POST['contactgegevens'] ?? null),
+                (int) $id,
+                HuidigeGebruiker::id(),
+            );
+            Flash::zet('success', 'Lid toegevoegd.');
+        } catch (\InvalidArgumentException $fout) {
+            Flash::zet('danger', $fout->getMessage());
+        }
+
+        $this->redirect("/groepen/{$id}");
+    }
+
+    public function lidUitschrijven(string $id, string $lidId): void
+    {
+        $this->lidService->uitschrijven((int) $id, (int) $lidId, HuidigeGebruiker::id());
+        Flash::zet('success', 'Lid uitgeschreven bij deze groep.');
+
+        $this->redirect("/groepen/{$id}");
+    }
+
+    private function leegAlsNull(?string $waarde): ?string
+    {
+        return ($waarde === null || $waarde === '') ? null : $waarde;
     }
 }

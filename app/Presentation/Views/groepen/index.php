@@ -21,7 +21,7 @@
     <tbody>
     <?php foreach ($groepen as $groep): ?>
         <tr>
-            <td><?= htmlspecialchars($groep->naam) ?></td>
+            <td><a href="/groepen/<?= $groep->id ?>"><?= htmlspecialchars($groep->naam) ?></a></td>
             <td><?= htmlspecialchars($groep->afdeling->naam) ?></td>
             <td>
                 <?= $groep->startDatum->format('d-m-Y') ?> &ndash;
