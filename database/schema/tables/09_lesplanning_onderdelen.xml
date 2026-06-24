@@ -1,0 +1,11 @@
+<table name="lesplanning_onderdelen">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="lesplanning_id" type="INT" references="lesplanningen.id" onDelete="CASCADE" />
+    <column name="volgnummer" type="INT" />
+    <column name="naam" type="VARCHAR" length="100" />
+    <column name="tijd_indicatie" type="VARCHAR" length="50" nullable="true" />
+    <column name="doel" type="TEXT" nullable="true" />
+    <column name="activiteit" type="TEXT" nullable="true" />
+    <column name="organisatie_en_materialen" type="TEXT" nullable="true" />
+    <column name="didactische_aanwijzingen" type="TEXT" nullable="true" />
+</table>

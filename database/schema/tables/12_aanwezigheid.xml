@@ -1,0 +1,11 @@
+<table name="aanwezigheid">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="les_id" type="INT" references="lessen.id" onDelete="CASCADE" />
+    <column name="lid_id" type="INT" references="leden.id" onDelete="RESTRICT" />
+    <column name="status" type="ENUM" values="aanwezig,afwezig,afgemeld,te_laat" default="aanwezig" />
+    <column name="opmerking" type="VARCHAR" length="255" nullable="true" />
+    <column name="geregistreerd_door" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
+    <column name="geregistreerd_op" type="DATETIME" default="CURRENT_TIMESTAMP" />
+
+    <unique columns="les_id,lid_id" />
+</table>

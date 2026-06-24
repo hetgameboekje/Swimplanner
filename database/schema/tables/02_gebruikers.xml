@@ -1,0 +1,9 @@
+<table name="gebruikers">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="naam" type="VARCHAR" length="150" />
+    <column name="email" type="VARCHAR" length="190" unique="true" />
+    <column name="wachtwoord_hash" type="VARCHAR" length="255" />
+    <column name="rol" type="ENUM" values="beheerder,instructeur" default="instructeur" />
+    <column name="actief" type="TINYINT" default="1" />
+    <column name="created_at" type="DATETIME" default="CURRENT_TIMESTAMP" />
+</table>

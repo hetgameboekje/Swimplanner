@@ -1,0 +1,7 @@
+<table name="leden">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="naam" type="VARCHAR" length="150" />
+    <column name="geboortedatum" type="DATE" nullable="true" />
+    <column name="contactgegevens" type="VARCHAR" length="255" nullable="true" />
+    <column name="actief" type="TINYINT" default="1" />
+</table>

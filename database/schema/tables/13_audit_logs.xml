@@ -1,0 +1,10 @@
+<table name="audit_logs">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="gebruiker_id" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
+    <column name="actie" type="VARCHAR" length="50" />
+    <column name="entiteit" type="VARCHAR" length="100" />
+    <column name="record_id" type="INT" nullable="true" />
+    <column name="samenvatting" type="TEXT" nullable="true" />
+    <column name="ip_adres" type="VARCHAR" length="45" nullable="true" />
+    <column name="created_at" type="DATETIME" default="CURRENT_TIMESTAMP" />
+</table>

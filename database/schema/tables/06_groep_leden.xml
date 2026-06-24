@@ -1,0 +1,7 @@
+<table name="groep_leden">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="groep_id" type="INT" references="groepen.id" onDelete="CASCADE" />
+    <column name="lid_id" type="INT" references="leden.id" onDelete="CASCADE" />
+    <column name="datum_aangemeld" type="DATE" />
+    <column name="datum_uitgeschreven" type="DATE" nullable="true" />
+</table>

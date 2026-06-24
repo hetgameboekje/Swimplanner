@@ -1,0 +1,9 @@
+<table name="lessen">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="groep_id" type="INT" references="groepen.id" onDelete="RESTRICT" />
+    <column name="datum" type="DATE" />
+    <column name="type" type="ENUM" values="regulier,activiteit,examen" default="regulier" />
+    <column name="instructeur_id" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
+    <column name="created_by" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
+    <column name="created_at" type="DATETIME" default="CURRENT_TIMESTAMP" />
+</table>

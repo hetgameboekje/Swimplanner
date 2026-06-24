@@ -1,0 +1,9 @@
+<table name="groep_instructeurs">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="groep_id" type="INT" references="groepen.id" onDelete="CASCADE" />
+    <column name="gebruiker_id" type="INT" references="gebruikers.id" onDelete="CASCADE" />
+    <column name="rol" type="ENUM" values="hoofd,assistent" default="hoofd" />
+    <column name="gekoppeld_op" type="DATETIME" default="CURRENT_TIMESTAMP" />
+
+    <unique columns="groep_id,gebruiker_id" />
+</table>

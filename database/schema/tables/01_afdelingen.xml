@@ -1,0 +1,5 @@
+<table name="afdelingen">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="naam" type="VARCHAR" length="100" unique="true" />
+    <column name="actief" type="TINYINT" default="1" />
+</table>

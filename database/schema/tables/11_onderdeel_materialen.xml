@@ -1,0 +1,9 @@
+<table name="onderdeel_materialen">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="lesplanning_onderdeel_id" type="INT" references="lesplanning_onderdelen.id" onDelete="CASCADE" />
+    <column name="materiaal_id" type="INT" references="materialen.id" onDelete="RESTRICT" />
+    <column name="aantal" type="INT" nullable="true" />
+    <column name="toelichting" type="VARCHAR" length="255" nullable="true" />
+
+    <unique columns="lesplanning_onderdeel_id,materiaal_id" />
+</table>

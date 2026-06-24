@@ -1,0 +1,14 @@
+<table name="lesplanningen">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="les_id" type="INT" nullable="true" unique="true" references="lessen.id" onDelete="SET NULL" />
+    <column name="groep_id" type="INT" references="groepen.id" onDelete="RESTRICT" />
+    <column name="instructeur_id" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
+    <column name="datum" type="DATE" />
+    <column name="begin_tijd" type="TIME" />
+    <column name="eind_tijd" type="TIME" />
+    <column name="locatie" type="VARCHAR" length="190" nullable="true" />
+    <column name="beginsituatie" type="TEXT" nullable="true" />
+    <column name="doelstelling" type="TEXT" nullable="true" />
+    <column name="created_at" type="DATETIME" default="CURRENT_TIMESTAMP" />
+    <column name="updated_at" type="DATETIME" nullable="true" onUpdateCurrentTimestamp="true" />
+</table>

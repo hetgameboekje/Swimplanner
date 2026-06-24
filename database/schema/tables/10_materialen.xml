@@ -1,0 +1,10 @@
+<table name="materialen">
+    <column name="id" type="INT" autoIncrement="true" primaryKey="true" />
+    <column name="naam" type="VARCHAR" length="150" />
+    <column name="categorie" type="VARCHAR" length="100" nullable="true" />
+    <column name="actief" type="TINYINT" default="1" />
+    <column name="created_by" type="INT" references="gebruikers.id" onDelete="RESTRICT" />
+    <column name="updated_by" type="INT" nullable="true" references="gebruikers.id" onDelete="RESTRICT" />
+    <column name="created_at" type="DATETIME" default="CURRENT_TIMESTAMP" />
+    <column name="updated_at" type="DATETIME" nullable="true" onUpdateCurrentTimestamp="true" />
+</table>
